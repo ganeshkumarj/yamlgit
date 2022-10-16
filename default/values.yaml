@@ -1,0 +1,155 @@
+---
+clusterName: "common"
+nodeGroup: "master"
+masterService: "opensearch-cluster-master"
+roles:
+- "master"
+- "ingest"
+- "data"
+- "remote_cluster_client"
+replicas: 3
+minimumMasterNodes: 2
+majorVersion: ""
+global:
+  dockerRegistry: ""
+opensearchHome: "/usr/share/opensearch"
+extraEnvs:
+- name: "DISABLE_INSTALL_DEMO_CONFIG"
+  value: "true"
+envFrom: []
+secretMounts:
+- name: "opensearch-http-certificate"
+  secretName: "es-nodes-secret"
+  path: "/usr/share/opensearch/config/certs/http"
+  defaultMode: 420
+- name: "opensearch-transport-certificate"
+  secretName: "es-nodes-secret"
+  path: "/usr/share/opensearch/config/certs/transport"
+  defaultMode: 420
+- name: "admin-transport-certificate"
+  secretName: "es-admin-secret"
+  path: "/usr/share/opensearch/config/certs/admin"
+  defaultMode: 420
+hostAliases: []
+image:
+  repository: "opensearchproject/opensearch"
+  tag: ""
+  pullPolicy: "IfNotPresent"
+podAnnotations: {}
+labels: {}
+opensearchJavaOpts: "-Xmx512M -Xms512M"
+resources:
+  requests:
+    cpu: "100m"
+    memory: "10Mi"
+initResources: {}
+sidecarResources: {}
+networkHost: "0.0.0.0"
+rbac:
+  create: false
+  serviceAccountAnnotations: {}
+  serviceAccountName: ""
+podSecurityPolicy:
+  create: false
+  name: ""
+  spec:
+    privileged: true
+    fsGroup:
+      rule: "RunAsAny"
+    runAsUser:
+      rule: "RunAsAny"
+    seLinux:
+      rule: "RunAsAny"
+    supplementalGroups:
+      rule: "RunAsAny"
+    volumes:
+    - "secret"
+    - "configMap"
+    - "persistentVolumeClaim"
+    - "emptyDir"
+persistence:
+  enabled: true
+  enableInitChown: true
+  labels:
+    enabled: false
+  accessModes:
+  - "ReadWriteOnce"
+  size: "1Gi"
+  annotations: {}
+extraVolumes: []
+extraVolumeMounts: []
+extraContainers: []
+extraInitContainers: []
+enableServiceLinks: true
+protocol: "http"
+httpPort: 9200
+transportPort: 9300
+service:
+  labels: {}
+  labelsHeadless: {}
+  headless:
+    annotations: {}
+  type: "ClusterIP"
+  nodePort: ""
+  annotations: {}
+  httpPortName: "http"
+  transportPortName: "transport"
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: ""
+updateStrategy: "RollingUpdate"
+maxUnavailable: 1
+podSecurityContext:
+  fsGroup: 1000
+  runAsUser: 1000
+securityContext:
+  capabilities:
+    drop:
+    - "ALL"
+  runAsNonRoot: true
+  runAsUser: 1000
+securityConfig:
+  enabled: true
+  path: "/usr/share/opensearch/plugins/opensearch-security/securityconfig"
+  actionGroupsSecret: null
+  configSecret: null
+  internalUsersSecret: null
+  rolesSecret: null
+  rolesMappingSecret: null
+  tenantsSecret:
+    securityConfigSecret: ""
+    data: {}
+terminationGracePeriod: 120
+sysctlVmMaxMapCount: 262144
+readinessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 3
+  timeoutSeconds: 2000
+schedulerName: ""
+imagePullSecrets: []
+nodeSelector: {}
+tolerations: []
+ingress:
+  enabled: false
+  annotations: {}
+  path: "/"
+  hosts:
+  - "chart-example.local"
+  tls: []
+nameOverride: ""
+fullnameOverride: ""
+masterTerminationFix: false
+lifecycle: {}
+keystore: []
+networkPolicy:
+  create: false
+  http:
+    enabled: false
+fsGroup: ""
+sysctl:
+  enabled: false
+plugins:
+  enabled: false
+  installList: []
